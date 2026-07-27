@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jhonatan Piña — Desarrollador Full-Stack · Salud Digital & IA</title>
+<meta name="description" content="Desarrollador full-stack y tech lead. Especialista en salud digital (historia clínica, hospitalización, facturación) y productos con IA. Angular · .NET · Node · Claude Code.">
+<style>
+  :root{
+    --ground:#070b12; --ground-2:#0a101c; --panel:#0e1523; --panel-2:#111a2b;
+    --line:rgba(125,155,205,.13); --line-strong:rgba(125,155,205,.24);
+    --ink:#e8edf7; --muted:#8494ae; --muted-2:#55627c;
+    --teal:#5eead4; --blue:#60a5fa; --violet:#a78bfa; --amber:#fbbf24;
+    --mono:ui-monospace,"Cascadia Code","JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;letter-spacing:-.005em;
+    background:
+      radial-gradient(1100px 600px at 85% -5%, rgba(96,165,250,.09), transparent 60%),
+      radial-gradient(900px 550px at 8% 12%, rgba(167,139,250,.08), transparent 60%),
+      radial-gradient(1000px 800px at 50% 115%, rgba(94,234,212,.06), transparent 55%),
+      var(--ground);
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 clamp(18px,4vw,32px)}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ::selection{background:var(--teal);color:#04211b}
+
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--teal);font-weight:600;display:inline-flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--teal)}
+
+  /* ===== hero ===== */
+  .hero{position:relative;padding:clamp(64px,12vh,120px) 0 56px;overflow:hidden}
+  #net{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none}
+  .hero-in{position:relative}
+  .hero h1{font-size:clamp(2.7rem,8.5vw,4.6rem);line-height:1;margin:18px 0 0;font-weight:800;letter-spacing:-.045em;text-wrap:balance}
+  .hero h1 .hl{background:linear-gradient(94deg,var(--teal),var(--blue) 55%,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero .lede{font-size:clamp(1.02rem,2.3vw,1.24rem);color:var(--muted);max-width:52ch;margin:22px 0 0;text-wrap:balance}
+  .hero .lede b{color:var(--ink);font-weight:600}
+  .loc{margin-top:26px;font-family:var(--mono);font-size:.8rem;color:var(--muted-2);display:flex;gap:18px;flex-wrap:wrap}
+  .loc span{display:inline-flex;align-items:center;gap:7px}
+  .cta{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:.82rem;letter-spacing:.04em;padding:11px 18px;border-radius:10px;
+    border:1px solid var(--line-strong);color:var(--ink);transition:.18s;display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{text-decoration:none;border-color:var(--teal);color:var(--teal);box-shadow:0 0 22px rgba(94,234,212,.15)}
+  .btn.solid{background:var(--teal);color:#04211b;border-color:var(--teal);font-weight:700}
+  .btn.solid:hover{box-shadow:0 0 28px rgba(94,234,212,.35);color:#04211b}
+
+  /* ===== stats strip ===== */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:56px}
+  .stat{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .stat .v{font-family:var(--mono);font-size:1.7rem;font-weight:700;font-variant-numeric:tabular-nums;
+    background:linear-gradient(92deg,var(--ink),#b9ccf2);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+
+  section{padding:64px 0 0}
+  h2{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:800;letter-spacing:-.035em;margin:14px 0 8px;text-wrap:balance}
+  .sec-sub{color:var(--muted);margin:0 0 30px;max-width:64ch}
+  .sec-sub b{color:var(--ink);font-weight:600}
+
+  /* ===== dominio salud ===== */
+  .domain{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .dom{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 19px;position:relative;overflow:hidden}
+  .dom::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);opacity:.75}
+  .dom h3{margin:0;font-size:1rem;font-weight:700;letter-spacing:-.02em}
+  .dom p{margin:7px 0 0;font-size:.88rem;color:var(--muted)}
+
+  /* ===== stack ===== */
+  .stack{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .layer{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 19px}
+  .layer .k{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--violet)}
+  .layer.front .k{color:var(--teal)} .layer.back .k{color:var(--blue)} .layer.ia .k{color:var(--violet)} .layer.infra .k{color:var(--amber)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .chip{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line-strong);border-radius:20px;padding:4px 12px;color:var(--ink)}
+  .chip.hot{border-color:color-mix(in srgb,var(--teal) 55%,transparent);color:var(--teal)}
+
+  /* ===== proyectos ===== */
+  .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .proj{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:16px;
+    padding:20px 21px;display:flex;flex-direction:column;gap:10px;transition:.2s;position:relative}
+  .proj:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+  .proj.featured{grid-column:1/-1;background:
+    linear-gradient(180deg,rgba(94,234,212,.05),transparent 45%),
+    linear-gradient(180deg,var(--panel-2),var(--panel))}
+  .proj .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .proj h3{margin:0;font-size:1.08rem;font-weight:700;letter-spacing:-.02em}
+  .proj h3 a{color:var(--ink)} .proj h3 a:hover{color:var(--teal);text-decoration:none}
+  .badge{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:20px;border:1px solid currentColor;flex:none}
+  .badge.live{color:var(--teal)} .badge.dev{color:var(--amber)} .badge.oss{color:var(--violet)} .badge.y{color:var(--muted)}
+  .proj p{margin:0;font-size:.9rem;color:var(--muted)}
+  .proj p b{color:var(--ink);font-weight:600}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:auto;padding-top:6px}
+  .tag{font-family:var(--mono);font-size:.7rem;color:var(--muted-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+  .links{display:flex;gap:14px;font-family:var(--mono);font-size:.78rem}
+
+  /* ===== trayectoria ===== */
+  .tl{list-style:none;margin:0;padding:0;position:relative}
+  .tl::before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .tl li{position:relative;padding:0 0 26px 34px}
+  .tl li:last-child{padding-bottom:0}
+  .tl .dot{position:absolute;left:0;top:6px;width:16px;height:16px;border-radius:50%;background:var(--ground);border:3px solid var(--blue)}
+  .tl li:first-child .dot{border-color:var(--teal);box-shadow:0 0 14px rgba(94,234,212,.4)}
+  .tl .when{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
+  .tl h3{margin:3px 0 4px;font-size:1.02rem;font-weight:700;letter-spacing:-.02em}
+  .tl p{margin:0;font-size:.9rem;color:var(--muted);max-width:62ch}
+
+  footer{margin-top:80px;border-top:1px solid var(--line);padding:30px 0 44px;
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+  footer .sig{font-family:var(--mono);font-size:.8rem;color:var(--muted-2)}
+  footer .gh{font-family:var(--mono);font-size:.85rem}
+
+  @media (max-width:760px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .domain{grid-template-columns:1fr}
+    .stack,.projects{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){#net{display:none}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <canvas id="net" aria-hidden="true"></canvas>
+  <div class="wrap hero-in">
+    <div class="eyebrow">Jhonatan Piña · Portafolio</div>
+    <h1>Construyo software<br>para <span class="hl">salud digital</span><br>y productos con IA.</h1>
+    <p class="lede">Desarrollador <b>full-stack</b> y <b>tech lead</b>. Llevo años dentro del sistema de salud:
+      historia clínica electrónica, hospitalización, facturación y agendamiento — el software del que dependen
+      pacientes reales. Hoy también construyo <b>productos propios con IA</b>.</p>
+    <div class="loc">
+      <span>📍 Colombia</span>
+      <span>🗓️ +5 años programando en serio</span>
+      <span>💻 ~85 repositorios</span>
+    </div>
+    <div class="cta">
+      <a class="btn solid" href="#proyectos">Ver proyectos ↓</a>
+      <a class="btn" href="https://github.com/Jhonatan0911" rel="me">GitHub ↗</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="stats" aria-label="Números rápidos">
+    <div class="stat"><div class="v">~85</div><div class="k">repositorios</div></div>
+    <div class="stat"><div class="v">10+</div><div class="k">tecnologías en producción</div></div>
+    <div class="stat"><div class="v">5</div><div class="k">años de trayectoria</div></div>
+    <div class="stat"><div class="v">1</div><div class="k">dominio que domino: salud</div></div>
+  </div>
+
+  <section id="salud" aria-labelledby="h-salud">
+    <div class="eyebrow">Especialidad</div>
+    <h2 id="h-salud">Salud digital, de punta a punta</h2>
+    <p class="sec-sub">No es un proyecto: es mi dominio. He construido y liderado módulos que hoy corren en
+      operación real de IPS — donde un bug no es un ticket, <b>es un paciente esperando</b>.</p>
+    <div class="domain">
+      <div class="dom"><h3>Historia clínica electrónica</h3><p>Fichas médicas, notas de seguimiento, consentimientos, control post-quirúrgico, HC domiciliaria.</p></div>
+      <div class="dom"><h3>Hospitalización</h3><p>Gestión de camas, ingreso a quirófano, triaje, ordenamientos y dispensación de medicamentos.</p></div>
+      <div class="dom"><h3>Facturación & agendamiento</h3><p>Facturación electrónica de citas y órdenes, integraciones con facturadores (Facele), RIPS, cuentas médicas.</p></div>
+      <div class="dom"><h3>Atención al usuario</h3><p>PQRS, encuestas de satisfacción, paneles omnicanal para la atención del paciente.</p></div>
+      <div class="dom"><h3>Integraciones clínicas</h3><p>Laboratorios, aseguradores y terceros del ecosistema salud — APIs REST sobre .NET y Node.</p></div>
+      <div class="dom"><h3>Microfrontends a escala</h3><p>Arquitectura de microfrontends Angular para que módulos clínicos evolucionen sin romperse entre sí.</p></div>
+    </div>
+  </section>
+
+  <section id="stack" aria-labelledby="h-stack">
+    <div class="eyebrow">Stack</div>
+    <h2 id="h-stack">Con qué construyo</h2>
+    <p class="sec-sub">Lo que uso a diario en negrilla verde; el resto lo he llevado a producción o lo manejo con soltura.</p>
+    <div class="stack">
+      <div class="layer front"><div class="k">Frontend</div>
+        <div class="chips">
+          <span class="chip hot">Angular</span><span class="chip hot">TypeScript</span><span class="chip">Ionic</span>
+          <span class="chip">React</span><span class="chip">Microfrontends</span><span class="chip">SCSS</span><span class="chip">Three.js</span>
+        </div>
+      </div>
+      <div class="layer back"><div class="k">Backend</div>
+        <div class="chips">
+          <span class="chip hot">.NET / C#</span><span class="chip hot">NestJS / Node</span><span class="chip">Laravel / PHP</span>
+          <span class="chip">Spring Boot</span><span class="chip">SQL Server</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span>
+        </div>
+      </div>
+      <div class="layer ia"><div class="k">IA aplicada</div>
+        <div class="chips">
+          <span class="chip hot">Claude Code · plugins & skills</span><span class="chip">Integraciones LLM (BYOK)</span>
+          <span class="chip">Agentes / automatización</span><span class="chip">WhatsApp Cloud API</span>
+        </div>
+      </div>
+      <div class="layer infra"><div class="k">Infra & móvil</div>
+        <div class="chips">
+          <span class="chip">Docker</span><span class="chip">CI/CD</span><span class="chip">GCP</span>
+          <span class="chip">Flutter / Dart</span><span class="chip">PWA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proyectos" aria-labelledby="h-proj">
+    <div class="eyebrow">Proyectos</div>
+    <h2 id="h-proj">Cosas que he construido</h2>
+    <p class="sec-sub">Productos propios y open source. El trabajo para clientes de salud vive en repos privados —
+      aquí está lo que puedo mostrar.</p>
+    <div class="projects">
+
+      <div class="proj featured">
+        <div class="top"><h3><a href="https://jhonatan0911.github.io/personal-os-plugin/">Personal OS — plugin para Claude Code</a></h3><span class="badge oss">open source</span></div>
+        <p>Un <b>jefe de gabinete dentro de la terminal</b>: brief diario reconciliado con Jira/Outlook/Teams,
+          ledger de riesgos y compromisos con IDs estables, bitácora automática de lo que haces (para cuando
+          tu jefe pregunta), tablero HTML y una <b>consola neuronal</b> que dibuja tus proyectos y riesgos como
+          un cerebro navegable. Instalable como plugin de Claude Code.</p>
+        <div class="tags"><span class="tag">Claude Code</span><span class="tag">Skills & hooks</span><span class="tag">MCP Jira/M365</span><span class="tag">Canvas</span></div>
+        <div class="links"><a href="https://jhonatan0911.github.io/personal-os-plugin/">Landing ↗</a><a href="https://github.com/Jhonatan0911/personal-os-plugin">Repo ↗</a></div>
+      </div>
+
+      <div class="proj">
+        <div class="top"><h3>WorkTrack AI</h3><span class="badge live">en producción</span></div>
+        <p>App web de <b>seguimiento inteligente de la jornada</b>: sesiones de trabajo con check-ins,
+          gestor de tareas multi-conector (Jira, Asana…), reportes por correo, equipos con daily,
+          export PDF/Excel/.ics e IA opcional con tu propia API key. PWA con CI/CD y migraciones automáticas.</p>
+        <div class="tags"><span class="tag">NestJS</span><span class="tag">Angular</span><span class="tag">Supabase</span><span class="tag">GCP</span><span class="tag">PWA</span></div>
+      </div>
+
+      <div class="proj">
+        <div class="top"><h3>BotSaaS</h3><span class="badge dev">en construcción</span></div>
+        <p>Plataforma SaaS <b>multi-tenant de automatización conversacional para WhatsApp</b>: capta y califica
+          leads, y hace handoff a agentes humanos con panel de atención en tiempo real. Clean Architecture,
+          16 entidades, dos APIs.</p>
+        <div class="tags"><span class="tag">.NET 10</span><span class="tag">PostgreSQL</span><span class="tag">SignalR</span><span class="tag">Angular</span><span class="tag">Docker</span></div>
+      </div>
+
+      <div class="proj">
+        <div class="top"><h3><a href="https://github.com/Jhonatan0911/api-cloud-whatsapp">WhatsApp Cloud API (2022)</a></h3><span class="badge oss">open source</span></div>
+        <p>API y frontend para la <b>WhatsApp Cloud API</b> cuando recién salía — mensajería programática
+          antes de que fuera mainstream. La semilla de lo que hoy es BotSaaS.</p>
+        <div class="tags"><span class="tag">Node</span><span class="tag">TypeScript</span><span class="tag">Angular</span></div>
+        <div class="links"><a href="https://github.com/Jhonatan0911/api-cloud-whatsapp">API ↗</a><a href="https://github.com/Jhonatan0911/front-api-whatsapp">Front ↗</a></div>
+      </div>
+
+      <div class="proj">
+        <div class="top"><h3><a href="https://github.com/Jhonatan0911/mf-Caracterizacion">Microfrontends de salud</a></h3><span class="badge oss">open source</span></div>
+        <p>Módulos clínicos como <b>microfrontends Angular independientes</b> — caracterización y población —
+          el patrón que luego apliqué a escala en sistemas hospitalarios completos.</p>
+        <div class="tags"><span class="tag">Angular</span><span class="tag">Module Federation</span><span class="tag">TypeScript</span></div>
+        <div class="links"><a href="https://github.com/Jhonatan0911/mf-Caracterizacion">Caracterización ↗</a><a href="https://github.com/Jhonatan0911/mf-Poblacion">Población ↗</a></div>
+      </div>
+
+      <div class="proj">
+        <div class="top"><h3><a href="https://github.com/Jhonatan0911/healthychef">HealthyChef</a></h3><span class="badge y">side project</span></div>
+        <p>App de <b>cocina saludable</b> — recetas y nutrición. Nació en el SENA como proyecto de nutrición
+          y evolucionó a una segunda versión en TypeScript.</p>
+        <div class="tags"><span class="tag">TypeScript</span><span class="tag">Angular</span></div>
+        <div class="links"><a href="https://github.com/Jhonatan0911/healthychef">Repo ↗</a></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="ruta" aria-labelledby="h-ruta">
+    <div class="eyebrow">Trayectoria</div>
+    <h2 id="h-ruta">De aprendiz a tech lead</h2>
+    <p class="sec-sub">La ruta se ve en los repos: cada año un salto de alcance.</p>
+    <ul class="tl">
+      <li><span class="dot"></span><span class="when">2025 — hoy</span>
+        <h3>Tech lead · salud digital + productos con IA</h3>
+        <p>Lidero técnicamente módulos de historia clínica, hospitalización y facturación para IPS,
+          coordinando varios equipos y clientes a la vez. En paralelo: WorkTrack AI en producción,
+          BotSaaS en construcción y tooling de IA sobre Claude Code (Personal OS).</p></li>
+      <li><span class="dot"></span><span class="when">2023 — 2024</span>
+        <h3>Arquitectura de microfrontends y módulos clínicos</h3>
+        <p>Triaje, gestión de camas, omnicanalidad, encuestas, gestión presupuestal — módulos Angular
+          independientes sobre APIs .NET y Node, con SQL Server y MongoDB.</p></li>
+      <li><span class="dot"></span><span class="when">2022</span>
+        <h3>Full-stack en serio</h3>
+        <p>Historia clínica, ambulancias, GISA, WhatsApp Cloud API recién lanzada, apps con Laravel,
+          Spring Boot y React. El año de probar todo el stack y quedarme con lo que rinde.</p></li>
+      <li><span class="dot"></span><span class="when">2021</span>
+        <h3>Fundamentos · SENA & MinTIC</h3>
+        <p>Primeros repos: Node, Angular, Laravel, Flutter. Proyectos formativos que ya apuntaban
+          a salud (GoodMedic) y a construir cosas útiles, no demos.</p></li>
+    </ul>
+  </section>
+
+</div>
+
+<div class="wrap">
+  <footer>
+    <div class="gh">📦 <a href="https://github.com/Jhonatan0911" rel="me">github.com/Jhonatan0911</a></div>
+    <div class="sig">Jhonatan Piña · hecho a mano, un solo HTML, cero frameworks</div>
+  </footer>
+</div>
+
+<script>
+(() => {
+  const cv=document.getElementById('net');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;if(reduce)return;
+  let W,H,dpr,pts=[];
+  const N=42,LINK=130;
+  function resize(){
+    dpr=Math.min(devicePixelRatio||1,2);
+    W=cv.offsetWidth;H=cv.offsetHeight;
+    cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    pts=Array.from({length:N},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,c:Math.random()}));
+  }
+  function color(c){return c<.45?'94,234,212':c<.8?'96,165,250':'167,139,250';}
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    for(const p of pts){p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;}
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
+      const a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);
+      if(d<LINK){ctx.strokeStyle=`rgba(${color(a.c)},${(1-d/LINK)*.16})`;ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+    }
+    for(const p of pts){ctx.fillStyle=`rgba(${color(p.c)},.7)`;
+      ctx.beginPath();ctx.arc(p.x,p.y,1.5,0,7);ctx.fill();}
+    requestAnimationFrame(tick);
+  }
+  addEventListener('resize',resize);
+  resize();requestAnimationFrame(tick);
+})();
+</script>
+
+</body>
+</html>
