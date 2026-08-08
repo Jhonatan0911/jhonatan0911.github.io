@@ -89,7 +89,16 @@
   .topbar .name{font-weight:700;font-size:.92rem;letter-spacing:-.02em}
   .topbar .name i{font-style:normal;color:var(--gold)}
   .topbar nav{display:flex;gap:22px;font-size:.84rem;color:var(--text-2)}
+  .topbar nav a{position:relative;padding-bottom:3px;transition:color .3s var(--ease)}
+  .topbar nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;
+    background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
   .topbar nav a:hover{color:var(--text)}
+  .topbar nav a.on{color:var(--gold)}
+  .topbar nav a.on::after,.topbar nav a:hover::after{transform:scaleX(1)}
+  .topbar .name{cursor:pointer;transition:transform .3s var(--ease)}
+  .topbar .name:hover{transform:translateX(2px)}
+  .topbar .name i{display:inline-block;animation:dotpulse 2.6s var(--ease) infinite}
+  @keyframes dotpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.65}}
   .tbtn{appearance:none;border:1px solid var(--border);background:var(--surface);
     color:var(--text-2);width:34px;height:34px;border-radius:10px;cursor:pointer;
     display:grid;place-items:center;font-size:.95rem;transition:.25s var(--ease)}
@@ -240,27 +249,52 @@
   /* ============ sections ============ */
   section{padding:96px 0 0}
   .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:10px}
-  .sec-num{font-family:var(--font-mono);font-size:.78rem;color:var(--gold);font-weight:600}
+  .sec-num{font-family:var(--font-mono);font-size:.78rem;color:var(--gold);font-weight:600;
+    display:inline-block;transform-origin:50% 50% -8px}
+  .sec-head.in .sec-num{animation:numFlip .9s var(--ease) .1s backwards}
+  @keyframes numFlip{from{opacity:0;transform:rotateX(-180deg) translateZ(-30px)}to{opacity:1;transform:none}}
   h2{font-size:clamp(1.6rem,3.6vw,2.2rem);font-weight:800;letter-spacing:-.035em;margin:0;text-wrap:balance}
+  /* la línea de sección avanza con el scroll */
   .sec-line{height:1px;background:var(--border);margin:22px 0 30px;position:relative;overflow:hidden}
-  .sec-line::after{content:"";position:absolute;inset:0;background:var(--gold);
-    transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
-  .inview .sec-line::after{transform:scaleX(.18)}
+  .sec-line::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg,var(--gold),var(--gold-line) 55%,transparent);
+    transform:scaleX(var(--sp,0));transform-origin:left}
   .sec-sub{color:var(--text-2);margin:0 0 34px;max-width:62ch;text-wrap:pretty}
   .sec-sub b{color:var(--text);font-weight:600}
 
-  /* reveal on scroll */
-  .rv{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-  .rv.in{opacity:1;transform:none}
+  /* reveal on scroll — ahora con giro en profundidad */
+  .rv{opacity:0;transform:perspective(900px) rotateX(-8deg) translateY(28px);
+    transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .rv.in{opacity:1;transform:var(--tf,none)}
+
+  /* ====== sistema de tarjetas 3D (inclinación + reflejo dorado) ====== */
+  @property --glare{syntax:'<color>';inherits:false;initial-value:transparent}
+  .gl{background-image:radial-gradient(320px 240px at var(--mx,50%) var(--my,50%),
+      var(--glare,transparent),transparent 62%);
+    transition:--glare .45s var(--ease),box-shadow .3s var(--ease),border-color .3s var(--ease)}
+  .gl:hover{--glare:color-mix(in srgb,var(--gold-bright) 13%,transparent)}
+  .t3{--rx:0deg;--ry:0deg;--lift:0px;
+    --tf:perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+    transform-style:preserve-3d;will-change:transform}
+  .t3 > *{transform:translateZ(12px)}
 
   /* ============ stats ============ */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);
     border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;margin-top:72px}
-  .stat{background:var(--surface);padding:26px 22px;transition:background .3s}
-  .stat:hover{background:var(--surface-2)}
-  .stat .v{font-size:2.1rem;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+  .stat{background:var(--surface);padding:26px 22px 30px;position:relative;overflow:hidden}
+  .stat .v{font-size:2.1rem;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;
+    transition:transform .35s var(--ease);transform-origin:left}
+  .stat:hover .v{transform:scale(1.06)}
   .stat .v i{font-style:normal;color:var(--gold)}
   .stat .k{font-size:.78rem;color:var(--muted);margin-top:6px;letter-spacing:.01em}
+  /* barra que se llena al entrar en pantalla */
+  .stat::after{content:"";position:absolute;left:22px;right:22px;bottom:16px;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,var(--gold-bright),var(--gold-line));
+    transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
+  .stats.in .stat::after{transform:scaleX(1)}
+  .stats.in .stat:nth-child(2)::after{transition-delay:.12s}
+  .stats.in .stat:nth-child(3)::after{transition-delay:.24s}
+  .stats.in .stat:nth-child(4)::after{transition-delay:.36s}
 
   /* ============ dominio ============ */
   .domain{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -268,7 +302,7 @@
     padding:22px;position:relative;transition:.3s var(--ease)}
   .dom::before{content:"";position:absolute;left:-1px;top:18px;bottom:18px;width:2px;
     background:var(--gold);border-radius:2px;transform:scaleY(0);transition:transform .35s var(--ease)}
-  .dom:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--border-strong)}
+  .dom:hover{--lift:-4px;box-shadow:var(--shadow-lg);border-color:var(--gold-line)}
   .dom:hover::before{transform:scaleY(1)}
   .dom h3{margin:0;font-size:.98rem;font-weight:700;letter-spacing:-.015em}
   .dom p{margin:8px 0 0;font-size:.86rem;color:var(--text-2);line-height:1.55}
@@ -276,12 +310,18 @@
   /* ============ stack ============ */
   .stack{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .layer{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);padding:22px;transition:.3s var(--ease)}
-  .layer:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong)}
+  .layer:hover{--lift:-3px;box-shadow:var(--shadow-lg);border-color:var(--gold-line)}
   .layer .k{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:600}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;transform-style:preserve-3d}
   .chip{font-size:.82rem;font-weight:500;border:1px solid var(--border);border-radius:999px;
-    padding:5px 14px;color:var(--text-2);background:var(--surface-2);transition:.25s var(--ease)}
-  .chip:hover{transform:translateY(-1px);border-color:var(--gold-line);color:var(--text)}
+    padding:5px 14px;color:var(--text-2);background:var(--surface-2);
+    transition:transform .25s var(--ease),border-color .25s,color .25s,box-shadow .25s;
+    display:inline-block}
+  .chip:hover{transform:translateY(-3px) translateZ(30px) rotateX(-10deg);
+    border-color:var(--gold-line);color:var(--text);box-shadow:var(--shadow-md)}
+  /* entrada escalonada de los chips */
+  .layer.in .chip{animation:chipIn .55s var(--ease) backwards;animation-delay:calc(var(--i,0)*45ms + .15s)}
+  @keyframes chipIn{from{opacity:0;transform:translateY(10px) rotateX(-40deg)}to{opacity:1;transform:none}}
   .chip.hot{background:var(--gold-soft);border-color:var(--gold-line);color:var(--text);font-weight:600}
 
   /* ============ proyectos ============ */
@@ -289,17 +329,26 @@
   .proj{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-xl);
     padding:24px;display:flex;flex-direction:column;gap:11px;position:relative;overflow:hidden;
     transition:.32s var(--ease)}
-  .proj:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--border-strong)}
+  .proj:hover{--lift:-5px;box-shadow:var(--shadow-lg);border-color:var(--gold-line)}
   .proj.featured{grid-column:1/-1}
   .proj.featured::after{content:"";position:absolute;top:0;left:0;right:0;height:2px;
-    background:linear-gradient(90deg,var(--gold-bright),transparent 70%)}
+    background:linear-gradient(90deg,transparent,var(--gold-bright) 35%,var(--gold-line) 55%,transparent);
+    background-size:220% 100%;animation:sweep 4.5s linear infinite}
+  @keyframes sweep{from{background-position:120% 0}to{background-position:-120% 0}}
   .proj .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .proj h3{margin:0;font-size:1.06rem;font-weight:700;letter-spacing:-.02em}
   .proj h3 a{transition:color .25s}
   .proj h3 a:hover{color:var(--gold)}
   .badge{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
     padding:4px 11px;border-radius:999px;flex:none;font-weight:600}
-  .badge.live{background:var(--gold-soft);color:var(--gold)}
+  .badge.live{background:var(--gold-soft);color:var(--gold);
+    display:inline-flex;align-items:center;gap:7px}
+  .badge.live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);
+    animation:beat 2s var(--ease) infinite}
+  @keyframes beat{
+    0%{box-shadow:0 0 0 0 var(--gold-line);transform:scale(1)}
+    60%{box-shadow:0 0 0 8px transparent;transform:scale(1.25)}
+    100%{box-shadow:0 0 0 0 transparent;transform:scale(1)}}
   .badge.dev{background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text-2)}
   .badge.oss{background:var(--surface-2);border:1px solid var(--border-strong);color:var(--text-2)}
   .proj p{margin:0;font-size:.9rem;color:var(--text-2);line-height:1.6}
@@ -315,11 +364,19 @@
   /* ============ trayectoria ============ */
   .tl{list-style:none;margin:0;padding:0;position:relative}
   .tl::before{content:"";position:absolute;left:7px;top:10px;bottom:10px;width:1px;background:var(--border)}
+  /* la línea se dibuja a medida que bajas */
+  .tl::after{content:"";position:absolute;left:7px;top:10px;bottom:10px;width:1px;
+    background:linear-gradient(var(--gold),var(--gold-line));
+    transform:scaleY(var(--p,0));transform-origin:top}
   .tl li{position:relative;padding:0 0 40px 40px}
   .tl li:last-child{padding-bottom:0}
-  .tl .dot{position:absolute;left:0;top:5px;width:15px;height:15px;border-radius:50%;
+  .tl .dot{position:absolute;left:0;top:5px;width:15px;height:15px;border-radius:50%;z-index:1;
     background:var(--bg);border:2px solid var(--border-strong);transition:.4s var(--ease)}
-  .tl li.in .dot{border-color:var(--gold);box-shadow:0 0 0 5px var(--gold-soft)}
+  .tl li.in .dot{border-color:var(--gold);box-shadow:0 0 0 5px var(--gold-soft);
+    animation:dotPop .6s var(--ease)}
+  @keyframes dotPop{0%{transform:scale(.4) rotate(-90deg)}60%{transform:scale(1.35) rotate(8deg)}100%{transform:none}}
+  .tl li h3{transition:transform .35s var(--ease)}
+  .tl li:hover h3{transform:translateX(6px)}
   .tl .when{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600}
   .tl h3{margin:6px 0 6px;font-size:1.05rem;font-weight:700;letter-spacing:-.02em}
   .tl p{margin:0;font-size:.9rem;color:var(--text-2);max-width:60ch;line-height:1.6}
@@ -327,9 +384,15 @@
   /* ============ footer ============ */
   footer{margin-top:110px;border-top:1px solid var(--border);padding:38px 0 52px}
   .foot-in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
-  footer .gh{font-size:.9rem;font-weight:600}
+  footer{position:relative;overflow:hidden}
+  footer::before{content:"";position:absolute;top:-1px;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    background-size:220% 100%;animation:sweep 6s linear infinite;opacity:.7}
+  footer .gh{font-size:.9rem;font-weight:600;transition:transform .3s var(--ease)}
+  footer .gh:hover{transform:translateY(-2px)}
   footer .gh a{color:var(--gold)}
   footer .sig{font-family:var(--font-mono);font-size:.72rem;color:var(--muted)}
+  footer .sig b{font-weight:400;color:var(--gold);font-style:normal}
 
   @media (max-width:760px){
     .stats{grid-template-columns:repeat(2,1fr)}
@@ -351,6 +414,12 @@
     .pulse path{animation:none;stroke-dasharray:none;stroke-dashoffset:0;opacity:.3}
     .tilt{transform:none!important}
     .mq-track span:hover{transform:none}
+    .t3{--tf:none}
+    .layer.in .chip{animation:none}
+    .chip:hover,.tl li:hover h3{transform:none}
+    .badge.live::before,.topbar .name i,.proj.featured::after,footer::before{animation:none}
+    .sec-head.in .sec-num,.tl li.in .dot{animation:none}
+    .stats.in .stat::after,.tl::after{transition:none}
     *{transition-duration:.01ms!important}
   }
   @media (max-width:760px){
@@ -431,10 +500,10 @@
 <div class="wrap">
 
   <div class="stats rv" aria-label="Números rápidos">
-    <div class="stat"><div class="v"><span data-count="85">0</span><i>+</i></div><div class="k">repositorios</div></div>
-    <div class="stat"><div class="v"><span data-count="10">0</span><i>+</i></div><div class="k">tecnologías en producción</div></div>
-    <div class="stat"><div class="v"><span data-count="5">0</span><i></i></div><div class="k">años de trayectoria</div></div>
-    <div class="stat"><div class="v"><span data-count="1">0</span><i></i></div><div class="k">dominio que domino: salud</div></div>
+    <div class="stat gl"><div class="v"><span data-count="85">0</span><i>+</i></div><div class="k">repositorios</div></div>
+    <div class="stat gl"><div class="v"><span data-count="10">0</span><i>+</i></div><div class="k">tecnologías en producción</div></div>
+    <div class="stat gl"><div class="v"><span data-count="5">0</span><i></i></div><div class="k">años de trayectoria</div></div>
+    <div class="stat gl"><div class="v"><span data-count="1">0</span><i></i></div><div class="k">dominio que domino: salud</div></div>
   </div>
 
   <section id="salud" aria-labelledby="h-salud">
@@ -443,12 +512,12 @@
     <p class="sec-sub rv">No es un proyecto: es mi dominio. He construido y liderado módulos que hoy corren en
       operación real de IPS — donde un bug no es un ticket, <b>es un paciente esperando</b>.</p>
     <div class="domain">
-      <div class="dom rv"><h3>Historia clínica electrónica</h3><p>Fichas médicas, notas de seguimiento, consentimientos, control post-quirúrgico, HC domiciliaria.</p></div>
-      <div class="dom rv"><h3>Hospitalización</h3><p>Gestión de camas, ingreso a quirófano, triaje, ordenamientos y dispensación de medicamentos.</p></div>
-      <div class="dom rv"><h3>Facturación & agendamiento</h3><p>Facturación electrónica de citas y órdenes, integraciones con facturadores, RIPS, cuentas médicas.</p></div>
-      <div class="dom rv"><h3>Atención al usuario</h3><p>PQRS, encuestas de satisfacción, paneles omnicanal para la atención del paciente.</p></div>
-      <div class="dom rv"><h3>Integraciones clínicas</h3><p>Laboratorios, aseguradores y terceros del ecosistema salud — APIs REST sobre .NET y Node.</p></div>
-      <div class="dom rv"><h3>Microfrontends a escala</h3><p>Arquitectura de microfrontends Angular para que módulos clínicos evolucionen sin romperse entre sí.</p></div>
+      <div class="dom rv t3 gl"><h3>Historia clínica electrónica</h3><p>Fichas médicas, notas de seguimiento, consentimientos, control post-quirúrgico, HC domiciliaria.</p></div>
+      <div class="dom rv t3 gl"><h3>Hospitalización</h3><p>Gestión de camas, ingreso a quirófano, triaje, ordenamientos y dispensación de medicamentos.</p></div>
+      <div class="dom rv t3 gl"><h3>Facturación & agendamiento</h3><p>Facturación electrónica de citas y órdenes, integraciones con facturadores, RIPS, cuentas médicas.</p></div>
+      <div class="dom rv t3 gl"><h3>Atención al usuario</h3><p>PQRS, encuestas de satisfacción, paneles omnicanal para la atención del paciente.</p></div>
+      <div class="dom rv t3 gl"><h3>Integraciones clínicas</h3><p>Laboratorios, aseguradores y terceros del ecosistema salud — APIs REST sobre .NET y Node.</p></div>
+      <div class="dom rv t3 gl"><h3>Microfrontends a escala</h3><p>Arquitectura de microfrontends Angular para que módulos clínicos evolucionen sin romperse entre sí.</p></div>
     </div>
   </section>
 
@@ -457,25 +526,25 @@
     <div class="sec-line"></div>
     <p class="sec-sub rv">Lo de uso diario resaltado en dorado; el resto lo he llevado a producción o lo manejo con soltura.</p>
     <div class="stack">
-      <div class="layer rv"><div class="k">Frontend</div>
+      <div class="layer rv t3 gl"><div class="k">Frontend</div>
         <div class="chips">
           <span class="chip hot">Angular</span><span class="chip hot">TypeScript</span><span class="chip">Ionic</span>
           <span class="chip">React</span><span class="chip">Microfrontends</span><span class="chip">SCSS</span><span class="chip">Three.js</span>
         </div>
       </div>
-      <div class="layer rv"><div class="k">Backend</div>
+      <div class="layer rv t3 gl"><div class="k">Backend</div>
         <div class="chips">
           <span class="chip hot">.NET / C#</span><span class="chip hot">NestJS / Node</span><span class="chip">Laravel / PHP</span>
           <span class="chip">Spring Boot</span><span class="chip">SQL Server</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span>
         </div>
       </div>
-      <div class="layer rv"><div class="k">IA aplicada</div>
+      <div class="layer rv t3 gl"><div class="k">IA aplicada</div>
         <div class="chips">
           <span class="chip hot">Claude Code · plugins & skills</span><span class="chip">Integraciones LLM (BYOK)</span>
           <span class="chip">Agentes / automatización</span><span class="chip">WhatsApp Cloud API</span>
         </div>
       </div>
-      <div class="layer rv"><div class="k">Infra & móvil</div>
+      <div class="layer rv t3 gl"><div class="k">Infra & móvil</div>
         <div class="chips">
           <span class="chip">Docker</span><span class="chip">CI/CD</span><span class="chip">GCP</span>
           <span class="chip">Flutter / Dart</span><span class="chip">PWA</span>
@@ -491,8 +560,8 @@
       aquí está lo que puedo mostrar.</p>
     <div class="projects">
 
-      <div class="proj featured rv">
-        <div class="top"><h3><a href="https://jhonatan0911.github.io/personal-os-plugin/">Personal OS — plugin para Claude Code</a></h3><span class="badge live">open source</span></div>
+      <div class="proj featured rv t3 gl">
+        <div class="top"><h3><a href="https://jhonatan0911.github.io/personal-os-plugin/">Personal OS — plugin para Claude Code</a></h3><span class="badge oss">open source</span></div>
         <p>Un <b>jefe de gabinete dentro de la terminal</b>: brief diario reconciliado con Jira/Outlook/Teams,
           ledger de riesgos y compromisos, bitácora automática de lo que haces (para cuando tu jefe pregunta),
           tablero HTML y una <b>consola neuronal</b> que dibuja tus proyectos y riesgos como un cerebro navegable.</p>
@@ -500,21 +569,21 @@
         <div class="links"><a href="https://jhonatan0911.github.io/personal-os-plugin/">Landing <span class="ar">↗</span></a><a href="https://github.com/Jhonatan0911/personal-os-plugin">Repo <span class="ar">↗</span></a></div>
       </div>
 
-      <div class="proj rv">
+      <div class="proj rv t3 gl">
         <div class="top"><h3>WorkTrack AI</h3><span class="badge live">en producción</span></div>
         <p>App web de <b>seguimiento inteligente de la jornada</b>: sesiones con check-ins, tareas multi-conector
           (Jira, Asana…), reportes por correo, equipos con daily, export PDF/Excel/.ics e IA opcional con tu propia API key.</p>
         <div class="tags"><span class="tag">NestJS</span><span class="tag">Angular</span><span class="tag">Supabase</span><span class="tag">GCP</span><span class="tag">PWA</span></div>
       </div>
 
-      <div class="proj rv">
+      <div class="proj rv t3 gl">
         <div class="top"><h3>BotSaaS</h3><span class="badge dev">en construcción</span></div>
         <p>Plataforma SaaS <b>multi-tenant de automatización conversacional para WhatsApp</b>: capta y califica
           leads, con handoff a agentes humanos y panel de atención en tiempo real.</p>
         <div class="tags"><span class="tag">.NET 10</span><span class="tag">PostgreSQL</span><span class="tag">SignalR</span><span class="tag">Angular</span><span class="tag">Docker</span></div>
       </div>
 
-      <div class="proj rv">
+      <div class="proj rv t3 gl">
         <div class="top"><h3><a href="https://github.com/Jhonatan0911/api-cloud-whatsapp">WhatsApp Cloud API (2022)</a></h3><span class="badge oss">open source</span></div>
         <p>API y frontend para la <b>WhatsApp Cloud API</b> cuando recién salía — mensajería programática antes
           de que fuera mainstream. La semilla de lo que hoy es BotSaaS.</p>
@@ -522,7 +591,7 @@
         <div class="links"><a href="https://github.com/Jhonatan0911/api-cloud-whatsapp">API <span class="ar">↗</span></a><a href="https://github.com/Jhonatan0911/front-api-whatsapp">Front <span class="ar">↗</span></a></div>
       </div>
 
-      <div class="proj rv">
+      <div class="proj rv t3 gl">
         <div class="top"><h3><a href="https://github.com/Jhonatan0911/mf-Caracterizacion">Microfrontends de salud</a></h3><span class="badge oss">open source</span></div>
         <p>Módulos clínicos como <b>microfrontends Angular independientes</b> — caracterización y población —
           el patrón que luego apliqué a escala en sistemas hospitalarios completos.</p>
@@ -530,7 +599,7 @@
         <div class="links"><a href="https://github.com/Jhonatan0911/mf-Caracterizacion">Caracterización <span class="ar">↗</span></a><a href="https://github.com/Jhonatan0911/mf-Poblacion">Población <span class="ar">↗</span></a></div>
       </div>
 
-      <div class="proj rv">
+      <div class="proj rv t3 gl">
         <div class="top"><h3><a href="https://github.com/Jhonatan0911/healthychef">HealthyChef</a></h3><span class="badge oss">side project</span></div>
         <p>App de <b>cocina saludable</b> — recetas y nutrición. Nació en el SENA como proyecto formativo
           y evolucionó a una segunda versión en TypeScript.</p>
@@ -594,13 +663,47 @@
 
   /* ---- barra de progreso + topbar ---- */
   const prog = document.getElementById('progress'), topbar = document.getElementById('topbar');
+  const secs = [...document.querySelectorAll('section')];
+  const navLinks = [...document.querySelectorAll('.topbar nav a')];
+  const tl = document.querySelector('.tl');
+  const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+
   const onScroll = () => {
-    const h = document.documentElement;
-    const max = h.scrollHeight - h.clientHeight;
+    const h = document.documentElement, vh = h.clientHeight;
+    const max = h.scrollHeight - vh;
     prog.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
     topbar.classList.toggle('on', h.scrollTop > innerHeight * .5);
+
+    // la línea de cada sección avanza según cuánto la has recorrido
+    let active = null;
+    for (const s of secs) {
+      const r = s.getBoundingClientRect();
+      const p = clamp01((vh * .82 - r.top) / Math.max(1, r.height * .75));
+      s.style.setProperty('--sp', p.toFixed(3));
+      if (r.top <= vh * .35 && r.bottom > vh * .35) active = s.id;
+    }
+    for (const a of navLinks) a.classList.toggle('on', a.getAttribute('href') === '#' + active);
+
+    // la línea de la trayectoria se dibuja al bajar
+    if (tl) {
+      const r = tl.getBoundingClientRect();
+      tl.style.setProperty('--p', clamp01((vh * .7 - r.top) / Math.max(1, r.height)).toFixed(3));
+    }
   };
-  addEventListener('scroll', onScroll, {passive:true}); onScroll();
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll, {passive:true});
+  onScroll();
+
+  /* ---- volver arriba desde el nombre de la barra ---- */
+  const brand = document.querySelector('.topbar .name');
+  if (brand) {
+    brand.setAttribute('role', 'button');
+    brand.setAttribute('tabindex', '0');
+    brand.setAttribute('aria-label', 'Volver al inicio');
+    const up = () => scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    brand.addEventListener('click', up);
+    brand.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); up(); } });
+  }
 
   /* ---- reveals con stagger por grupo ---- */
   const io = new IntersectionObserver(entries => {
@@ -873,6 +976,40 @@
     size(); build();
     if (reduce) draw(); else raf = requestAnimationFrame(frame);
     addEventListener('load', () => { size(); if (reduce) draw(); });
+  }
+
+  /* ---- chips: índice para la entrada escalonada ---- */
+  document.querySelectorAll('.chips').forEach(box => {
+    [...box.children].forEach((c, i) => c.style.setProperty('--i', i));
+  });
+
+  /* ---- tarjetas: inclinación 3D + reflejo que sigue el cursor ---- */
+  if (fine && !reduce) {
+    for (const card of document.querySelectorAll('.gl')) {
+      const tilts = card.classList.contains('t3');
+      let box = null;
+      card.addEventListener('pointerenter', () => {
+        box = card.getBoundingClientRect();
+        if (tilts) card.style.transition = 'transform .14s linear, box-shadow .3s, border-color .3s, --glare .35s';
+      });
+      card.addEventListener('pointermove', e => {
+        if (!box) box = card.getBoundingClientRect();
+        const px = (e.clientX - box.left) / box.width, py = (e.clientY - box.top) / box.height;
+        card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+        card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+        if (tilts) {
+          card.style.setProperty('--ry', ((px - .5) * 8).toFixed(2) + 'deg');
+          card.style.setProperty('--rx', ((.5 - py) * 8).toFixed(2) + 'deg');
+        }
+      }, { passive: true });
+      card.addEventListener('pointerleave', () => {
+        box = null;
+        if (!tilts) return;
+        card.style.transition = 'transform .55s var(--ease), box-shadow .3s, border-color .3s, --glare .35s';
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+      });
+    }
   }
 })();
 </script>
